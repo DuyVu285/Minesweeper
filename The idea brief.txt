@@ -1,0 +1,11 @@
+#the idea of minesweeper
+with cells, mines
+Point of the game is to guess which cells have mines and get all the points.
+Upon getting all the points you win the game
+When clicking on the safe cell, the number displayed 0-8 indicated the number of mines in the adjacent cells.
+ 
+ windows
+ Splitting into sections
+ top sections: mine, time?
+ left section: count mine?
+ center section: the game
