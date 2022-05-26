@@ -1,11 +1,24 @@
-#the idea of minesweeper
+# The idea of minesweeper
 with cells, mines
-Point of the game is to guess which cells have mines and get all the points.
-Upon getting all the points you win the game
+Goal of the game is to dodge cells that have mines and get all the points.
+Upon getting all the points, you win the game
 When clicking on the safe cell, the number displayed 0-8 indicated the number of mines in the adjacent cells.
  
- windows
- Splitting into sections
- top sections: mine, time?
- left section: count mine?
- center section: the game
+Main:
+Splitting into sections
+Top sections: mine, time
+Left section: count mine
+Center section: the game
+Produce the cell
+
+Settings:
+The wide of the game screen
+The size of grid
+
+Util:
+Resize the settings for design use
+
+Cell:
+cell body code
+action buttons
+randomize mines into cells
