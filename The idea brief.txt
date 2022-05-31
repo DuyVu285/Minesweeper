@@ -37,3 +37,9 @@ Ex:
 2,1
 2,2
 1,2
+
+Idea for undo cell:
+Click again to undo
+Undo just configure cell to basic
+If hit mine, click again to undo
+An option to restart game

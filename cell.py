@@ -1,11 +1,15 @@
 from msilib.schema import Property
 from tkinter import Button
+from tkinter import Label
 import random
 import settings
 
 # Creating the cells
 class Cell:
     all = []
+    cell_count = settings.cell_count
+    cell_count_label_object = None
+    
     # Constructor
     def __init__(self,x,y, is_mine=False):
         self.is_mine = is_mine
@@ -15,6 +19,7 @@ class Cell:
         
         # Append the object to Cell.all list
         Cell.all.append(self)
+        
     # Create the button for cell object
     def create_btn_object(self, location):
         btn = Button(
@@ -25,12 +30,27 @@ class Cell:
         btn.bind('<Button-1>',self.left_click_actions)  # Left Click
         btn.bind('<Button-3>',self.right_click_actions) # Right Click
         self.cell_btn_object = btn
+    
+    @staticmethod
+    # Create cell count label
+    def create_cell_count_label(location):
+        lbl = Label(
+            location,
+            bg = 'black',
+            fg = 'white',
+            text = f'Cells left:{Cell.cell_count}',
+            font = ('', 30)
+        )
+        Cell.cell_count_label_object = lbl
         
     # Assign an event to the button
     def left_click_actions(self, event):
         if self.is_mine:
             self.show_mine()
         else:
+            if self.surrounded_cells_mines_length == 0:
+                for cell_obj in self.surrounded_cells:
+                    cell_obj.show_cell()
             self.show_cell()
             
     def right_click_actions(self, event):
@@ -71,7 +91,13 @@ class Cell:
         
     # Show cell
     def show_cell(self):
-        print(self.surrounded_cells)
+        Cell.cell_count -= 1
+        self.cell_btn_object.configure(text = self.surrounded_cells_mines_length)
+        # Replace the text of cell count label with the newer count
+        if Cell.cell_count_label_object:
+            Cell.cell_count_label_object.configure(
+                text= f'Cells Left:{Cell.cell_count}'
+            )
 
     # Check if the adjacent cells are mines
     def get_cell_by_axis(self,x,y):

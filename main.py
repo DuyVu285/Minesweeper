@@ -15,7 +15,7 @@ root.resizable(True, True)
 # Divide the game window into sections
 top_frame = Frame(
     root,
-    bg = 'black', # Change later to black
+    bg = 'black', 
     width = settings.width,
     height = utils.height_prct(25)
 )
@@ -24,7 +24,7 @@ top_frame.place(x=0, y=0)
 
 left_frame = Frame(
     root,
-    bg = 'black', # Change later to black
+    bg = 'black', 
     width = utils.width_prct(25),
     height = utils.height_prct(75)
 )
@@ -32,7 +32,7 @@ left_frame.place(x=0, y=utils.height_prct(25))
 
 center_frame = Frame(
     root,
-    bg = 'black', # Change later to black
+    bg = 'black', 
     width = utils.width_prct(75),
     height = utils.height_prct(75)
 )
@@ -54,6 +54,13 @@ for x in range(settings.grid_size):
         c.cell_btn_object.grid(
             column=x, row=y
         )
+        
+# Call the label from the Cell class
+Cell.create_cell_count_label(left_frame)
+Cell.cell_count_label_object.place(
+    x=0, y=0
+)
+
 # Randomize the mines
 Cell.randomize_mines()
 
