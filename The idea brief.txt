@@ -1,5 +1,5 @@
 # The idea of minesweeper
-with cells, mines
+With cells, mines
 Goal of the game is to dodge cells that have mines and get all the points.
 Upon getting all the points, you win the game
 When clicking on the safe cell, the number displayed 0-8 indicated the number of mines in the adjacent cells.
@@ -10,15 +10,30 @@ Top sections: mine, time
 Left section: count mine
 Center section: the game
 Produce the cell
+randomize mines
 
 Settings:
 The wide of the game screen
 The size of grid
+Mines count based on grid
 
 Util:
 Resize the settings for design use
 
 Cell:
-cell body code
-action buttons
-randomize mines into cells
+Cell body code
+Action buttons
+Randomize mines into cells
+
+Surround cell:
+Ex:
+1,1:
+
+0,0
+0,1
+0,2
+1,0
+2,0
+2,1
+2,2
+1,2

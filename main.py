@@ -54,8 +54,8 @@ for x in range(settings.grid_size):
         c.cell_btn_object.grid(
             column=x, row=y
         )
-
-print(Cell.all)
+# Randomize the mines
+Cell.randomize_mines()
 
 # Run the window
 root.mainloop()
