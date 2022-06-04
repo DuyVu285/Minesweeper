@@ -1,8 +1,10 @@
 from msilib.schema import Property
+import sys
 from tkinter import Button
 from tkinter import Label
 import random
 import settings
+import ctypes
 
 # Creating the cells
 class Cell:
@@ -13,6 +15,8 @@ class Cell:
     # Constructor
     def __init__(self,x,y, is_mine=False):
         self.is_mine = is_mine
+        self.is_opened = False
+        self.is_mine_candiate = False
         self.cell_btn_object = None
         self.x = x
         self.y = y
@@ -52,16 +56,34 @@ class Cell:
                 for cell_obj in self.surrounded_cells:
                     cell_obj.show_cell()
             self.show_cell()
-            
-    def right_click_actions(self, event):
-        print(event)
-        print("I am right clicked!")
+            # If Mines count is equal to the cells left count, player won
+            if Cell.cell_count == settings.mines_count:
+                ctypes.windll.user32.MessageBoxW(0, 'Congratulations! You won the game', 'Game Over', 0)
+
+        # Cancel all events if cell is already opened:
+        self.cell_btn_object.unbind('<Button-1>')
+        self.cell_btn_object.unbind('<Button-3>')
         
+    def right_click_actions(self, event):
+        if not self.is_mine_candiate:
+            self.cell_btn_object.configure(
+                bg = 'orange'
+            )
+            self.is_mine_candiate = True
+        else:
+            #Undo 
+            self.cell_btn_object.configure(
+                bg = 'SystemButtonFace'
+            )
+            self.is_mine_candiate = False
+            
     # Display cell as mine    
     def show_mine(self):
         # A logic to interrupt the game and display a message that player lost
         self.cell_btn_object.configure(bg ='red')
-    
+        ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine', 'Game Over', 0)
+        sys.exit()
+        
     # Surround cell
     @property
     def surrounded_cells(self):
@@ -91,13 +113,21 @@ class Cell:
         
     # Show cell
     def show_cell(self):
-        Cell.cell_count -= 1
-        self.cell_btn_object.configure(text = self.surrounded_cells_mines_length)
-        # Replace the text of cell count label with the newer count
-        if Cell.cell_count_label_object:
-            Cell.cell_count_label_object.configure(
-                text= f'Cells Left:{Cell.cell_count}'
+        if not self.is_opened:
+            Cell.cell_count -= 1
+            self.cell_btn_object.configure(text = self.surrounded_cells_mines_length)
+            # Replace the text of cell count label with the newer count
+            if Cell.cell_count_label_object:
+                Cell.cell_count_label_object.configure(
+                    text= f'Cells Left:{Cell.cell_count}'
+                )
+            # If this was a mine candidate, then for safety, we should
+            # configure the background color to SytemButtonFace
+            self.cell_btn_object.configure(
+                bg = 'SystemButtonFace'
             )
+        # Mark the cell as opened (Use is as the last line of this method)
+        self.is_opened = True
 
     # Check if the adjacent cells are mines
     def get_cell_by_axis(self,x,y):
