@@ -12,9 +12,8 @@ class Cell:
     all = []
     pressed_btn_list = []
     images = []
+    gameStep = []
     colour = {1: "blue", 2: "green", 3:"brown", 4:"purple", 5:"red", 6:"pink"}
-    cell_count = settings.CELL
-    cell_count_label_object = None
     
     # Constructor
     def __init__(self,x,y, is_mine=False):
@@ -36,24 +35,13 @@ class Cell:
         btn.bind('<Button-1>',self.left_click_actions)  # Left Click
         btn.bind('<Button-3>',self.right_click_actions) # Right Click
         self.cell_btn_object = btn
-    
-    #@staticmethod
-    # Create cell count label
-    #def create_cell_count_label(location):
-    #   lbl = Label(
-    #       location,
-    #        bg = 'black',
-    #        fg = 'white',
-    #        text = f'Cells left:{Cell.cell_count}',
-    #        font = ('', 30)
-    #    )
-    #    Cell.cell_count_label_object = lbl
         
     # Assign an event to the button
     def left_click_actions(self, event):
         if self.cell_btn_object['state'] == 'disabled':
             return
         if self.is_mine:
+            Cell.gameStep.append(self)
             self.show_mine()
         else:
             self.show_cell()
@@ -76,16 +64,16 @@ class Cell:
                 #set flag img
                 self.cell_btn_object.config(
                     image = Cell.images[2],
-                    width= 18,
-                    height= 18,
+                    width= 37,
+                    height= 35,
                     state ='disabled'
                 )
             elif self.cell_btn_object['state'] == 'disabled':
                 #disable flag img
                 self.cell_btn_object.config(
                     image = '',
-                    width= 2,
-                    height= 1,
+                    width= 5,
+                    height= 2,
                     bg = 'SystemButtonFace',
                     state ='normal'
                 )
@@ -99,14 +87,25 @@ class Cell:
             if x.is_mine == True:
                 x.cell_btn_object.config(
                     image=Cell.images[0],
-                    width = 18,
-                    height = 18,
-                    bg = 'red'
+                    width = 37,
+                    height = 35,
                 )
             x.cell_btn_object.config(state = 'disabled')
         ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine', 'Game Over', 0)
 
-        
+    # The undo function
+    def undo():
+        for x in Cell.all:
+            x.cell_btn_object.config(state = 'normal')
+            if x.is_mine == True:
+                x.cell_btn_object.config(
+                    image='',
+                    width = 5,
+                    height = 2,
+                    bg = 'SystemButtonFace',
+                    state ='normal'
+                )
+
     # Surround cell
     @property
     def surrounded_cells(self):
@@ -143,12 +142,6 @@ class Cell:
                 text = self.surrounded_cells_mines_length,
                 fg = Cell.colour.get(self.surrounded_cells_mines_length)
             )
-            # Cell.cell_count -= 1
-            # Replace the text of cell count label with the newer count
-            # if Cell.cell_count_label_object:
-            #    Cell.cell_count_label_object.configure(
-            #        text= f'Cells Left:{Cell.cell_count}'
-            #    )
             Cell.pressed_btn_list.append(self)
 
     def cascade(self):
@@ -192,8 +185,8 @@ class Cell:
             if x.is_mine == True:
                 x.cell_btn_object.config(
                     image = Cell.images[1],
-                    width = 18,
-                    height = 18
+                    width = 37,
+                    height = 35
                 )
             x.cell_btn_object.config(state = 'disabled')
 

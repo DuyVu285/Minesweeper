@@ -27,7 +27,6 @@ def apply(mines, rows, cols):
     ROWS= rows
     COLS = cols
     CELL = ROWS*COLS
-    print(ROWS, COLS, MINES)
 
 # Rescaling frame change
 def frame_change():

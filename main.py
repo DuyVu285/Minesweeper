@@ -18,17 +18,17 @@ def main():
     # Getting the images resources
     mine_img_path = 'images\mine.ico'
     mine_img = Image.open(mine_img_path)
-    mine_img = mine_img.resize((18, 18), Image.ANTIALIAS)
+    mine_img = mine_img.resize((37, 35))
     mine_img = ImageTk.PhotoImage(mine_img)
     
     smiley_img_path = 'images\smiley.png'
     smiley_img = Image.open(smiley_img_path)
-    smiley_img = smiley_img.resize((18, 18), Image.ANTIALIAS)
+    smiley_img = smiley_img.resize((37, 35))
     smiley_img = ImageTk.PhotoImage(smiley_img)
     
     flag_img_path = 'images\plag.png'
     flag_img = Image.open(flag_img_path)
-    flag_img = flag_img.resize((18, 18), Image.ANTIALIAS)
+    flag_img = flag_img.resize((37, 35))
     flag_img = ImageTk.PhotoImage(flag_img)
     
     # Divide the game window into frame sections
@@ -50,7 +50,7 @@ def main():
 
     center_frame = Frame(
         root,
-        bg = 'black', 
+        bg = 'grey', 
         width = utils.width_prct(75),
         height = utils.height_prct(75)
     )
@@ -79,7 +79,7 @@ def main():
         orient=HORIZONTAL, 
         length= 100
     )
-    no_mines_scale.place(x=0, y=100)
+    no_mines_scale.place(x=0, y=0)
     no_mines_scale.set(settings.MINES*100)
     
     rows_scale_value = IntVar()
@@ -92,7 +92,7 @@ def main():
         orient=HORIZONTAL, 
         length= 100
     )
-    rows_scale.place(x=0, y=200)
+    rows_scale.place(x=110, y=0)
     rows_scale.set(settings.ROWS)
 
     
@@ -106,7 +106,7 @@ def main():
         orient=HORIZONTAL, 
         length= 100
     )
-    cols_scale.place(x=0, y=300)
+    cols_scale.place(x=220, y=0)
     cols_scale.set(settings.COLS)
     
     # Designing the button for New game and Apply changes
@@ -118,19 +118,32 @@ def main():
             no_mines_scale_value.get(),
             rows_scale_value.get(),
             cols_scale_value.get(),
-        )
+        ),
+        padx = 70,
+        pady = 20
     )
-    apply_btn.place(x=0, y=400)
+    apply_btn.place(x=0, y=140)
     
     # New game button to refresh mainloop()
     new_game_btn = Button(
         left_frame,
         text = 'New \n Game',
         command=lambda: refresh(root),
-        pady = 15
+        padx = 70,
+        pady = 10
     )
-    new_game_btn.place(x=100,y=400)
+    new_game_btn.place(x=0,y=70)
 
+    # Undo button
+    undo_btn = Button(
+        left_frame,
+        text = 'Undo',
+        command=lambda: undo(root),
+        padx = 70,
+        pady = 10
+    )
+    undo_btn.place(x=0,y=210)
+    
     # The cell
     for x in range(settings.COLS):
         for y in range(settings.ROWS):
@@ -139,12 +152,6 @@ def main():
             c.cell_btn_object.grid(
                 column=x, row=y
             )
-            
-    # Call the label from the Cell class
-    #Cell.create_cell_count_label(left_frame)
-    #Cell.cell_count_label_object.place(
-    #    x=0, y=0
-    #)
 
     # Get cell images
     
@@ -164,5 +171,10 @@ def refresh(location):
     settings.frame_change()
     main()
 
+# Undo
+def undo(location):
+    Cell.undo()
+    Cell.gameStep.pop()
+    Cell.gameStep.clear()
 if __name__ == '__main__':
     main()
