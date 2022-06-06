@@ -30,6 +30,11 @@ def main():
     flag_img = flag_img.resize((37, 35))
     flag_img = ImageTk.PhotoImage(flag_img)
     
+    check_img_path = 'images\check2.jpg'
+    check_img = Image.open(check_img_path)
+    check_img = check_img.resize((37, 35))
+    check_img = ImageTk.PhotoImage(check_img)
+    
     # Divide the game window into frame sections
     top_frame = Frame(
         root,
@@ -154,7 +159,7 @@ def main():
 
     # Get cell images
     
-    Cell.get_images(mine_img, smiley_img, flag_img)
+    Cell.get_images(mine_img, smiley_img, flag_img, check_img)
     # Randomize the mines
     Cell.randomize_mines()
 

@@ -10,7 +10,9 @@ Top sections: mine, time
 Left section: count mine
 Center section: the game
 Produce the cell
-randomize mines
+Randomize mines
+An option to restart game
+Difficulties
 
 Settings:
 The wide of the game screen
@@ -42,4 +44,8 @@ Idea for undo cell:
 Click again to undo
 Undo just configure cell to basic
 If hit mine, click again to undo
-An option to restart game
+
+Start menu:
+Cover of the game
+Start button
+Quit button

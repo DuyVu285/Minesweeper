@@ -21,6 +21,7 @@ class Cell:
         self.x = x
         self.y = y
         self.is_opened = False
+        self.is_flagged = False
         
         # Append the object to Cell.all list
         Cell.all.append(self)
@@ -80,6 +81,7 @@ class Cell:
                     height= 35,
                     state ='disabled'
                 )
+                self.is_flagged = True
             elif self.cell_btn_object['state'] == 'disabled':
                 #disable flag img
                 self.cell_btn_object.config(
@@ -89,6 +91,7 @@ class Cell:
                     bg = 'SystemButtonFace',
                     state ='normal'
                 )
+                self.is_flagged = False
         else:
             pass
 
@@ -97,18 +100,25 @@ class Cell:
         # A logic to interrupt the game and display a message that player lost
         for x in Cell.all:
             if x.is_mine == True:
-                x.cell_btn_object.config(
-                    image=Cell.images[0],
-                    width = 37,
-                    height = 35,
-                )
+                if(x.is_flagged == False):
+                    x.cell_btn_object.config(
+                        image=Cell.images[0],
+                        width = 37,
+                        height = 35,
+                    )
+                else:
+                    x.cell_btn_object.config(
+                        image=Cell.images[3],
+                        width = 37,
+                        height = 35,
+                    )
             x.cell_btn_object.config(state = 'disabled')
-        ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine', 'Game Over', 0)
+        ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine!', 'Game Over!', 0)
 
     # The undo function
     def undo():
         if(not Cell.gameStep):
-            ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore')
+            ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore!')
         else:
             if(isinstance(Cell.gameStep[-1],list)):
                 for x in Cell.gameStep[-1]:
@@ -135,18 +145,28 @@ class Cell:
                     Cell.pressed_btn_list.pop()
                 else:
                     for x in Cell.all:
-                        if x.is_mine == True:
-                            x.cell_btn_object.config(
-                                image = '',
-                                width = 5,
-                                height = 2,
-                                bg = 'SystemButtonFace',
-                            )
-                            x.is_opened = False
-                            # Rebind the clicks
-                            x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
-                            x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
                         x.cell_btn_object.config(state = 'normal')
+                        if x.is_mine == True:
+                            if(x.is_flagged == False): 
+                                x.cell_btn_object.config(
+                                    image = '',
+                                    width = 5,
+                                    height = 2,
+                                    bg = 'SystemButtonFace',
+                                )
+                                x.is_opened = False
+                                # Rebind the clicks
+                                x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                                x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                            else:
+                                x.cell_btn_object.config(
+                                    image = Cell.images[2],
+                                    width = 37,
+                                    height = 35,
+                                )
+                                x.is_opened = False
+                                # Rebind the clicks
+                                x.cell_btn_object.config(state = 'disabled')
                     Cell.gameStep.pop()
             
     # Surrounded cells
@@ -205,18 +225,19 @@ class Cell:
         return f'Cell({self.x},{self.y})'
     
     # Getting images
-    def get_images(a, b, c):
+    def get_images(a, b, c, d):
         Cell.images.append(a)
         Cell.images.append(b)
         Cell.images.append(c)
-      
+        Cell.images.append(d)
+
     # End game  
     def end_game(self):
         for x in Cell.all:
             if x.is_mine == True:
-                x.cell_btn_object.config(
-                    image = Cell.images[1],
-                    width = 37,
-                    height = 35
-                )
+                    x.cell_btn_object.config(
+                        image = Cell.images[1],
+                        width = 37,
+                        height = 35
+                    )
             x.cell_btn_object.config(state = 'disabled')
