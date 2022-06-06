@@ -86,7 +86,7 @@ def main():
         left_frame, 
         label = 'Rows',
         from_= 6, 
-        to_= 20, 
+        to_= 13, 
         variable =rows_scale_value,
         orient=HORIZONTAL, 
         length= 100
@@ -100,7 +100,7 @@ def main():
         left_frame, 
         label = 'Columns',
         from_= 6, 
-        to_= 20, 
+        to_= 24, 
         variable =cols_scale_value,
         orient=HORIZONTAL, 
         length= 100
