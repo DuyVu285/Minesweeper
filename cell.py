@@ -3,7 +3,6 @@ import sys
 from tkinter import Button
 from tkinter import Label
 import random
-from turtle import delay
 import settings
 import ctypes
 
@@ -12,7 +11,7 @@ class Cell:
     all = []
     pressed_btn_list = []
     images = []
-    gameStep = []
+    gameStep = []   # Keep track of player's move
     colour = {1: "blue", 2: "green", 3:"brown", 4:"purple", 5:"red", 6:"pink"}
     
     # Constructor
@@ -21,6 +20,7 @@ class Cell:
         self.cell_btn_object = None
         self.x = x
         self.y = y
+        self.is_opened = False
         
         # Append the object to Cell.all list
         Cell.all.append(self)
@@ -44,6 +44,18 @@ class Cell:
             Cell.gameStep.append(self)
             self.show_mine()
         else:
+            RemoveChunk = []
+            if self.surrounded_cells_mines_length == 0:
+                #Adding a remove chunk list for undo
+                if(self.is_opened == False):
+                    RemoveChunk.append(self)
+                    for cell_obj in self.surrounded_cells:
+                        if(cell_obj.is_opened == False):
+                            cell_obj.show_cell()
+                            RemoveChunk.append(cell_obj)
+                    Cell.gameStep.append(RemoveChunk)
+            if(self not in RemoveChunk):
+                Cell.gameStep.append(self)
             self.show_cell()
             # If Mines count is equal to the cells left count, player won
             if ((settings.ROWS * settings.COLS) - int(len(Cell.all)*settings.MINES)) == len(list(set(Cell.pressed_btn_list))):
@@ -95,18 +107,49 @@ class Cell:
 
     # The undo function
     def undo():
-        for x in Cell.all:
-            x.cell_btn_object.config(state = 'normal')
-            if x.is_mine == True:
-                x.cell_btn_object.config(
-                    image='',
-                    width = 5,
-                    height = 2,
-                    bg = 'SystemButtonFace',
-                    state ='normal'
-                )
-
-    # Surround cell
+        if(not Cell.gameStep):
+            ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore')
+        else:
+            if(isinstance(Cell.gameStep[-1],list)):
+                for x in Cell.gameStep[-1]:
+                    x.cell_btn_object.config(
+                        text =""
+                    )
+                    x.is_opened = False
+                    # Rebind the clicks
+                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                Cell.gameStep.pop()
+                Cell.pressed_btn_list.pop()
+            else:
+                x = Cell.gameStep[-1]
+                if(not x.is_mine):
+                    x.cell_btn_object.config(
+                        text =""
+                    )
+                    x.is_opened = False
+                    # Rebind the clicks
+                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                    Cell.gameStep.pop()
+                    Cell.pressed_btn_list.pop()
+                else:
+                    for x in Cell.all:
+                        if x.is_mine == True:
+                            x.cell_btn_object.config(
+                                image = '',
+                                width = 5,
+                                height = 2,
+                                bg = 'SystemButtonFace',
+                            )
+                            x.is_opened = False
+                            # Rebind the clicks
+                            x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                            x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                        x.cell_btn_object.config(state = 'normal')
+                    Cell.gameStep.pop()
+            
+    # Surrounded cells
     @property
     def surrounded_cells(self):
         cells = [
@@ -135,24 +178,12 @@ class Cell:
         
     # Show cell
     def show_cell(self):
-        if self.surrounded_cells_mines_length == 0:
-            self.cascade()
-        else:
             self.cell_btn_object.config(
                 text = self.surrounded_cells_mines_length,
-                fg = Cell.colour.get(self.surrounded_cells_mines_length)
+                fg = Cell.colour.get(self.surrounded_cells_mines_length),
             )
+            self.is_opened = True
             Cell.pressed_btn_list.append(self)
-
-    def cascade(self):
-        if self not in Cell.pressed_btn_list:
-            Cell.pressed_btn_list.append(self)
-            self.cell_btn_object.config(
-                text = self.surrounded_cells_mines_length,
-                fg = Cell.colour.get(self.surrounded_cells_mines_length)
-            )
-            for cell in self.surrounded_cells:
-                cell.show_cell()
         
     # Check if the adjacent cells are mines
     def get_cell_by_axis(self,x,y):
@@ -189,5 +220,3 @@ class Cell:
                     height = 35
                 )
             x.cell_btn_object.config(state = 'disabled')
-
-    

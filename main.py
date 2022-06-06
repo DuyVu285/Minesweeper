@@ -2,7 +2,6 @@ from ctypes import util
 from PIL import ImageTk
 from tkinter import *
 from PIL import Image
-from window import Window
 from cell import Cell
 import settings
 import utils
@@ -166,6 +165,7 @@ def main():
 def refresh(location):
     location.destroy()
     Cell.all = []
+    Cell.gameStep = []
     Cell.pressed_btn_list = []
     Cell.images = []
     settings.frame_change()
@@ -174,7 +174,6 @@ def refresh(location):
 # Undo
 def undo(location):
     Cell.undo()
-    Cell.gameStep.pop()
-    Cell.gameStep.clear()
+    
 if __name__ == '__main__':
     main()
