@@ -49,3 +49,9 @@ Start menu:
 Cover of the game
 Start button
 Quit button
+
+4 classes:
+    gamewindow
+    cell
+    start
+    main
