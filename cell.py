@@ -47,7 +47,7 @@ class Cell:
         else:
             RemoveChunk = []
             if self.surrounded_cells_mines_length == 0:
-                #Adding a remove chunk list for undo
+                # Adding a remove chunk list for undo
                 if(self.is_opened == False):
                     RemoveChunk.append(self)
                     for cell_obj in self.surrounded_cells:
@@ -74,7 +74,7 @@ class Cell:
     def create_flag(self):
         if self not in Cell.pressed_btn_list:
             if self.cell_btn_object['state'] == 'normal':
-                #set flag img
+                # Set flag img
                 self.cell_btn_object.config(
                     image = Cell.images[2],
                     width= 37,
@@ -83,7 +83,7 @@ class Cell:
                 )
                 self.is_flagged = True
             elif self.cell_btn_object['state'] == 'disabled':
-                #disable flag img
+                # Disable flag img
                 self.cell_btn_object.config(
                     image = '',
                     width= 5,
@@ -134,39 +134,51 @@ class Cell:
             else:
                 x = Cell.gameStep[-1]
                 if(not x.is_mine):
-                    x.cell_btn_object.config(
-                        text =""
-                    )
-                    x.is_opened = False
-                    # Rebind the clicks
-                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
-                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
-                    Cell.gameStep.pop()
-                    Cell.pressed_btn_list.pop()
+                    if(x.is_flagged == False):
+                        x.cell_btn_object.config(
+                            text =""
+                        )
+                        x.is_opened = False
+                        # Rebind the clicks
+                        x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                        x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                        Cell.gameStep.pop()
+                        Cell.pressed_btn_list.pop()
                 else:
                     for x in Cell.all:
-                        x.cell_btn_object.config(state = 'normal')
-                        if x.is_mine == True:
-                            if(x.is_flagged == False): 
-                                x.cell_btn_object.config(
-                                    image = '',
-                                    width = 5,
-                                    height = 2,
-                                    bg = 'SystemButtonFace',
-                                )
-                                x.is_opened = False
-                                # Rebind the clicks
-                                x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
-                                x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                            x.cell_btn_object.config(state = 'normal')
+                            if x.is_mine == True:
+                                if(x.is_flagged == False): 
+                                    x.cell_btn_object.config(
+                                        image = '',
+                                        width = 5,
+                                        height = 2,
+                                        bg = 'SystemButtonFace',
+                                    )
+                                    x.is_opened = False
+                                    # Rebind the clicks
+                                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                                else:
+                                    x.cell_btn_object.config(
+                                        image = Cell.images[2],
+                                        width = 37,
+                                        height = 35,
+                                    )
+                                    x.is_opened = False
+                                    x.cell_btn_object.config(state = 'disabled')
                             else:
-                                x.cell_btn_object.config(
-                                    image = Cell.images[2],
-                                    width = 37,
-                                    height = 35,
-                                )
-                                x.is_opened = False
-                                # Rebind the clicks
-                                x.cell_btn_object.config(state = 'disabled')
+                                if(x.is_flagged == True):
+                                    x.cell_btn_object.config(
+                                        image = Cell.images[2],
+                                        width = 37,
+                                        height = 35,
+                                    )
+                                    x.is_opened = False
+                                    x.cell_btn_object.config(state = 'disabled')
+                                    # Rebind the clicks
+                                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
                     Cell.gameStep.pop()
             
     # Surrounded cells
