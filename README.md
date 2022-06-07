@@ -13,7 +13,7 @@ Minesweeper is a single-player puzzle video game. The objective of the game is t
 - Mouse's left and right buttons: the mouse is the only tool that player needs in order to play Minesweeper. The left mouse button is used to click squares to show whether it is a mine or a safe square, while the right mouse button is used to flag cells that contain mines.
 - The meaning of the numbers: a number on a cell refers to the number of mines that are currently neighboring that cell. For example, if there the cell has the number 1 on it, you know that the cells surrounding it has a mine hidden beneath one of them.
 - Win condition: player have clicked all the safe cells without triggering any mines.
-- 
+
 	Features:
 	
 - Clear unnecessary cells: When the left click event occurs, the open property is set to true, and the surrounding mines are also checked. If the value is 0, then use recursion to open the surrounding cells. The recursion stops when the value is not 0. For example, the player hits a 0 cell, unimportant cells are opened. To find the code, find surrounded_cells functions in cell.py.
