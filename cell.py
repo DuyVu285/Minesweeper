@@ -1,7 +1,6 @@
 from msilib.schema import Property
 from tkinter import Button
 import random
-
 from sympy import true
 import settings
 import ctypes
