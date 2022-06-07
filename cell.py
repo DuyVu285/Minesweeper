@@ -56,7 +56,8 @@ class Cell:
                             RemoveChunk.append(cell_obj)
                     Cell.gameStep.append(RemoveChunk)
             if(self not in RemoveChunk):
-                Cell.gameStep.append(self)
+                if(self.is_opened == False):
+                    Cell.gameStep.append(self)
             self.show_cell()
             # If Mines count is equal to the cells left count, player won
             if ((settings.ROWS * settings.COLS) - int(len(Cell.all)*settings.MINES)) == len(list(set(Cell.pressed_btn_list))):

@@ -9,3 +9,4 @@ def height_prct(percentage):
 def width_prct(percentage):
     return (settings.WIDTH/100)*percentage
 
+

@@ -70,7 +70,7 @@ class GameWindow():
         )
 
         game_title.place(
-            x=utils.width_prct(25), y= 0
+            x=utils.width_prct(25), y= utils.height_prct(5)
             )
         # Desgin the scroll buttons to set difficulty
         no_mines_scale_value = IntVar()
