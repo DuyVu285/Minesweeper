@@ -173,6 +173,7 @@ def refresh(location):
     Cell.gameStep = []
     Cell.pressed_btn_list = []
     Cell.images = []
+    Cell.endgameflag = False
     settings.frame_change()
     GameWindow.main()
 

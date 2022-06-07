@@ -1,7 +1,6 @@
 import pygame 
 from gamewindow import GameWindow
 import sys
-import utils
 
 class Menu:
     def menu():

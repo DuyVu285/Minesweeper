@@ -1,8 +1,8 @@
 from msilib.schema import Property
-import sys
 from tkinter import Button
-from tkinter import Label
 import random
+
+from sympy import true
 import settings
 import ctypes
 
@@ -13,6 +13,7 @@ class Cell:
     images = []
     gameStep = []   # Keep track of player's move
     colour = {1: "blue", 2: "green", 3:"brown", 4:"purple", 5:"red", 6:"pink"}
+    endgameflag = False
     
     # Constructor
     def __init__(self,x,y, is_mine=False):
@@ -61,7 +62,7 @@ class Cell:
             self.show_cell()
             # If Mines count is equal to the cells left count, player won
             if ((settings.ROWS * settings.COLS) - int(len(Cell.all)*settings.MINES)) == len(list(set(Cell.pressed_btn_list))):
-                self.end_game()
+                self.end_game_phase()
                 ctypes.windll.user32.MessageBoxW(0, 'Congratulations! You won the game', 'Game Over', 0)
                 
         # Cancel all events if cell is already opened:
@@ -119,7 +120,9 @@ class Cell:
     # The undo function
     def undo():
         if(not Cell.gameStep):
-            ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore!')
+            ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore!','Warning', 0)
+        elif(Cell.endgameflag == True):
+            ctypes.windll.user32.MessageBoxW(0, 'You has already won the game!','Warning', 0)
         else:
             if(isinstance(Cell.gameStep[-1],list)):
                 for x in Cell.gameStep[-1]:
@@ -245,7 +248,8 @@ class Cell:
         Cell.images.append(d)
 
     # End game  
-    def end_game(self):
+    def end_game_phase(self):
+        Cell.endgameflag = True
         for x in Cell.all:
             if x.is_mine == True:
                     x.cell_btn_object.config(
