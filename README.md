@@ -2,6 +2,7 @@
 The DSA project- Minesweeper Game by Vu Nhat Duy IT IU
 
 DSA project of designing Minesweeper Game with OOP using python.
+
   What is Minesweeper?
 Minesweeper is a single-player puzzle video game. The objective of the game is to clear a rectangular board containing hidden "mines" or bombs without detonating any of them, with help from clues about the number of neighboring mines in each field.
 	How to play Minesweeper
