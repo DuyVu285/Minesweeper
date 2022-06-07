@@ -114,6 +114,8 @@ class Cell:
                         width = 37,
                         height = 35,
                     )
+            x.cell_btn_object.unbind('<Button-1>')
+            x.cell_btn_object.unbind('<Button-3>')
             x.cell_btn_object.config(state = 'disabled')
         ctypes.windll.user32.MessageBoxW(0, 'You clicked on a mine!', 'Game Over!', 0)
 
@@ -150,39 +152,35 @@ class Cell:
                         Cell.pressed_btn_list.pop()
                 else:
                     for x in Cell.all:
-                            x.cell_btn_object.config(state = 'normal')
-                            if x.is_mine == True:
-                                if(x.is_flagged == False): 
-                                    x.cell_btn_object.config(
-                                        image = '',
-                                        width = 5,
-                                        height = 2,
-                                        bg = 'SystemButtonFace',
-                                    )
-                                    x.is_opened = False
-                                    # Rebind the clicks
-                                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
-                                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
-                                else:
-                                    x.cell_btn_object.config(
-                                        image = Cell.images[2],
-                                        width = 37,
-                                        height = 35,
-                                    )
-                                    x.is_opened = False
-                                    x.cell_btn_object.config(state = 'disabled')
+                        x.cell_btn_object.config(state = 'normal')
+                        if x.is_mine == True:
+                            if(x.is_flagged == False): 
+                                x.cell_btn_object.config(
+                                    image = '',
+                                    width = 5,
+                                    height = 2,
+                                    bg = 'SystemButtonFace',
+                                )
+                                x.is_opened = False
                             else:
-                                if(x.is_flagged == True):
-                                    x.cell_btn_object.config(
-                                        image = Cell.images[2],
-                                        width = 37,
-                                        height = 35,
-                                    )
-                                    x.is_opened = False
-                                    x.cell_btn_object.config(state = 'disabled')
-                                    # Rebind the clicks
-                                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
-                                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                                x.cell_btn_object.config(
+                                    image = Cell.images[2],
+                                    width = 37,
+                                    height = 35,
+                                )
+                                x.is_opened = False
+                                x.cell_btn_object.config(state = 'disabled')
+                        else:
+                            if(x.is_flagged == True):
+                                x.cell_btn_object.config(
+                                    image = Cell.images[2],
+                                    width = 37,
+                                    height = 35,
+                                )
+                                x.is_opened = False
+                                x.cell_btn_object.config(state = 'disabled')
+                        x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                        x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
                     Cell.gameStep.pop()
             
     # Surrounded cells
