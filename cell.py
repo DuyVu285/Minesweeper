@@ -111,7 +111,6 @@ class Cell:
 
     # The undo function
     def undo():
-        print(Cell.gameStep)
         if(not Cell.gameStep):
             ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore!','Warning', 0)
         elif(Cell.endgameflag == True):
