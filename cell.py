@@ -10,6 +10,7 @@ class Cell:
     all = []
     pressed_btn_list = []
     images = []
+    removeChunk = []
     gameStep = []   # Keep track of player's move
     colour = {1: "blue", 2: "green", 3:"brown", 4:"purple", 5:"red", 6:"pink"}
     endgameflag = False
@@ -45,20 +46,10 @@ class Cell:
             Cell.gameStep.append(self)
             self.show_mine()
         else:
-            RemoveChunk = []
-            if self.surrounded_cells_mines_length == 0:
-                # Adding a remove chunk list for undo
-                if(self.is_opened == False):
-                    RemoveChunk.append(self)
-                    for cell_obj in self.surrounded_cells:
-                        if(cell_obj.is_opened == False):
-                            cell_obj.show_cell()
-                            RemoveChunk.append(cell_obj)
-                    Cell.gameStep.append(RemoveChunk)
-            if(self not in RemoveChunk):
-                if(self.is_opened == False):
-                    Cell.gameStep.append(self)
             self.show_cell()
+            if (Cell.removeChunk):
+                Cell.gameStep.append(Cell.removeChunk)
+                Cell.removeChunk = []
             # If Mines count is equal to the cells left count, player won
             if ((settings.ROWS * settings.COLS) - int(len(Cell.all)*settings.MINES)) == len(list(set(Cell.pressed_btn_list))):
                 self.end_game_phase()
@@ -120,6 +111,7 @@ class Cell:
 
     # The undo function
     def undo():
+        print(Cell.gameStep)
         if(not Cell.gameStep):
             ctypes.windll.user32.MessageBoxW(0, 'You cannot undo anymore!','Warning', 0)
         elif(Cell.endgameflag == True):
@@ -127,15 +119,16 @@ class Cell:
         else:
             if(isinstance(Cell.gameStep[-1],list)):
                 for x in Cell.gameStep[-1]:
-                    x.cell_btn_object.config(
-                        text =""
-                    )
-                    x.is_opened = False
-                    # Rebind the clicks
-                    x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
-                    x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                    if(x.is_opened):
+                        x.cell_btn_object.config(
+                            text =""
+                        )
+                        x.is_opened = False
+                        # Rebind the clicks
+                        x.cell_btn_object.bind('<Button-1>',x.left_click_actions)
+                        x.cell_btn_object.bind('<Button-3>',x.right_click_actions)
+                        Cell.pressed_btn_list.remove(x)
                 Cell.gameStep.pop()
-                Cell.pressed_btn_list.pop()
             else:
                 x = Cell.gameStep[-1]
                 if(not x.is_mine):
@@ -211,13 +204,36 @@ class Cell:
         
     # Show cell
     def show_cell(self):
+        if self.surrounded_cells_mines_length == 0:
+            self.cascade()
+        else:
             self.cell_btn_object.config(
                 text = self.surrounded_cells_mines_length,
                 fg = Cell.colour.get(self.surrounded_cells_mines_length),
             )
             self.is_opened = True
+            if (self not in Cell.removeChunk):
+                Cell.gameStep.append(self)
             Cell.pressed_btn_list.append(self)
-        
+            
+    # Cascade
+    def cascade(self):
+        if self not in Cell.pressed_btn_list:
+            if (self not in Cell.removeChunk):
+                Cell.removeChunk.append(self)
+            Cell.pressed_btn_list.append(self)
+            self.cell_btn_object.config(
+                        text=self.surrounded_cells_mines_length,
+                        fg = Cell.colour.get(self.surrounded_cells_mines_length),
+            )
+            self.is_opened = True
+            for cell in self.surrounded_cells:
+                if (cell not in Cell.removeChunk):
+                    if(cell not in Cell.gameStep):
+                        Cell.removeChunk.append(cell)
+                        cell.show_cell()
+                
+    
     # Check if the adjacent cells are mines
     def get_cell_by_axis(self,x,y):
         # Return a cell object based on the value of x,y
